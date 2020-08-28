@@ -84,6 +84,15 @@ it is nearly impossible to get it back.  Please review the lists below and comme
 $StartTime = Get-Date
 $CurrentLocation = Get-Location
 
+$W10Versions = @{
+    18363 = "1909"
+    19041 = "2004"
+}
+$SKU = $W10Versions[[int](Get-WMIObject Win32_OperatingSystem).BuildNumber]
+If ($SKU -ne $WindowsVersion) {
+    Write-Warning "Looks like you are running on $SKU but specified $WindowsVersion. You might have problems"
+}
+
 Try 
 {
     Set-Location (Join-Path $PSScriptRoot $WindowsVersion)-ErrorAction Stop
