@@ -195,7 +195,11 @@ If ($DisableAutologgers.count -gt 0)
     Foreach ($Item in $DisableAutologgers)
     {
         Write-Verbose "Adding $($Item.KeyName)"
-        New-ItemProperty -Path "$($Item.KeyName)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force | Out-Null
+        Try {
+            New-ItemProperty -Path "$($Item.KeyName)" -Name "Start" -PropertyType "DWORD" -Value "0" -Force | Out-Null
+        } Catch {
+            Write-Warning "Error writing to key $($Item.KeyName)"
+        }
     }
 }
 #endregion

@@ -1,6 +1,6 @@
 ﻿#Build JSON Configuration Files
 
-$WinVersion = '2004'
+$WinVersion = '1909'
 
 if (-not(Test-Path .\$WinVersion))
 {
