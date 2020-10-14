@@ -1,6 +1,10 @@
 ﻿#Build JSON Configuration Files
 
-$WinVersion = '1909'
+$W10Versions = @{
+    18363 = "1909"
+    19041 = "2004"
+}
+$WinVersion = $W10Versions[[int](Get-WMIObject Win32_OperatingSystem).BuildNumber]
 
 if (-not(Test-Path .\$WinVersion))
 {

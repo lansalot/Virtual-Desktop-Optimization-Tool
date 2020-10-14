@@ -29,13 +29,8 @@
 Param
 (
     [Parameter()]
-    [ValidateSet('1909','2004')]
-    $WindowsVersion = 2004,
-
-    [Parameter()]
     [Switch]
     $Restart
-
 )
 
 #Requires -RunAsAdministrator
@@ -89,10 +84,7 @@ $W10Versions = @{
     18363 = "1909"
     19041 = "2004"
 }
-$SKU = $W10Versions[[int](Get-WMIObject Win32_OperatingSystem).BuildNumber]
-If ($SKU -ne $WindowsVersion) {
-    Write-Warning "Looks like you are running on $SKU but specified $WindowsVersion. You might have problems"
-}
+$WindowsVersion = $W10Versions[[int](Get-WMIObject Win32_OperatingSystem).BuildNumber]
 
 Try 
 {
