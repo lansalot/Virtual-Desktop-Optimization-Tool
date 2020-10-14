@@ -44,6 +44,7 @@ Param
 - TITLE:          Microsoft Windows 10 Virtual Desktop Optimization Script
 - AUTHORED BY:    Robert M. Smith and Tim Muessig (Microsoft)
 - AUTHORED DATE:  11/19/2019
+- CONTRIBUTORS:   Travis Roberts (2020)
 - LAST UPDATED:   8/14/2020
 - PURPOSE:        To automatically apply settings referenced in the following white papers:
                   https://docs.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds_vdi-recommendations-1909
@@ -110,8 +111,8 @@ Try
     Write-Verbose "Disabling Windows Media Player Feature"
     Disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -NoRestart | Out-Null
     Get-WindowsPackage -Online -PackageName "*Windows-mediaplayer*" | ForEach-Object { 
-        Write-Verbose "Removeing $($_.PackageName)"
-        Remove-WindowsPackage -PackageName $_.PackageName -Online -ErrorAction SilentlyContinue  -NoRestart | Out-Null
+        Write-Verbose "Removing $($_.PackageName)"
+        Remove-WindowsPackage -PackageName $_.PackageName -Online -ErrorAction SilentlyContinue -NoRestart | Out-Null
     }
 }
 Catch { }
@@ -159,8 +160,9 @@ If ($SchTasksList.count -gt 0)
     Foreach ($Item in $SchTasksList)
     {
         #$Task = (($Item -split ":")[0]).Trim()
+        $TaskObject = Get-ScheduledTask $Item.ScheduledTask
         Write-Verbose "Disabling Scheduled Task $($Item.ScheduledTask)"
-        Disable-ScheduledTask -TaskName $Item.ScheduledTask -ErrorAction SilentlyContinue
+        Disable-ScheduledTask -InputObject $TaskObject -ErrorAction SilentlyContinue
         #$EnabledScheduledTasks | Where-Object { $_.TaskName -like "*$Task*" } #| Disable-ScheduledTask
     }
 }
@@ -232,7 +234,7 @@ If ($ServicesToDisable.count -gt 0)
     {
         Write-Verbose "Stopping $($Item.Name) - $($Item.Description)"
         Stop-Service $Item.Name -Force -ErrorAction SilentlyContinue
-        Write-Verbose "`t`tDisabling $($Item.Name)"
+        Write-Verbose "Disabling $($Item.Name)"
         Set-Service $Item.Name -StartupType Disabled 
     }
 }
