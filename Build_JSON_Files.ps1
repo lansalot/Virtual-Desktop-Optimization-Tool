@@ -194,7 +194,6 @@ SEMgrSvc
 SmsRouter
 SysMain
 TabletInputService
-UsoSvc
 VSS
 WdiSystemHost
 WerSvc
